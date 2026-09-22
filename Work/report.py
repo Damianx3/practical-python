@@ -11,7 +11,7 @@ def read_portfolio(filename):
         headers = next(rows)
         for row in rows:
             holding = {
-                'names': row[0],
+                'name': row[0],
                 'shares': int(row[1]),
                 'price': float(row[2]),
             }
@@ -38,3 +38,23 @@ for stock in portfolio:
     total_cost += stock['shares'] * stock['price']
     total_value += stock['shares'] * prices[stock['name']]
 
+def make_report(portfolio, prices):
+    report = []
+
+    for stock in portfolio:
+        name = stock['name']
+        shares = stock['shares']
+        current_price = prices[stock['name']]
+        change = current_price - stock['price']
+        row = (name, shares, current_price, change)
+        report.append(row)
+    return report
+
+report = make_report(portfolio, prices)
+headers = ('Name', 'Shares', 'Price', 'Change')
+print(f'{headers[0]:>10s}{headers[1]:>10s}{headers[2]:>10s}{headers[3]:>10s}')
+print('---------- ---------- ---------- ----------')
+
+for name, shares, price, change in report:
+    price_str = f'${price:.2f}'
+    print(f'{name:>10s} {shares:>10d} {price_str:>10s} {change:>10.2f}')
